@@ -6,6 +6,7 @@
     <title>Iniciar Sesión</title>
 </head>
 <body>
+    <a href="../index.php">Volver</a>
     <h1>Iniciar Sesión</h1>
 
     <form action="">

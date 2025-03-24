@@ -6,6 +6,7 @@
     <title>Registro</title>
 </head>
 <body>
+    <a href="login.php">Volver</a>
     <h1>Formulario de inscripción</h1>
 
     <form action="">
