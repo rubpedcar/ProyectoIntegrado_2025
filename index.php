@@ -13,17 +13,27 @@
 
     <div>
         <p>Foto 1</p>
-        <p>Por participante1</p>
+        <p>Por Participante1</p>
         <p>Descripción</p>
         <button>Votar</button>
     </div>
 
     <div>
         <p>Foto 2</p>
-        <p>Por participante2</p>
+        <p>Por Participante2</p>
         <p>Descripción</p>
         <button>Votar</button>
     </div>
 
+
+    <h1>Vista Participante (P.E. Participante1)</h1>
+    <h1>Mis Publicaciones</h1>
+
+    <div>
+        <p>Foto 1</p>
+        <p>Descripción</p>
+        <p>Estado</p>
+        <p><a href="">Modificar</a> <a href="">Borrar</a></p>
+    </div>
 </body>
 </html>
