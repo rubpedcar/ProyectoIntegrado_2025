@@ -14,7 +14,12 @@
         <p>Email: <input type="text" name="email"></p>
         <p>Contraseña: <input type="password" name="password"></p>
         <p>Elige una foto de perfil:</p>
-        <p>Foto 1, Foto 2, Foto 3, Foto 4</p>
+
+        <div>
+            <img src="../fotos_perfil/perfil_01.png" alt="foto de perfil 1" style="width: 200px;">
+            <img src="../fotos_perfil/perfil_02.png" alt="foto de perfil 2" style="width: 200px;">
+            <img src="../fotos_perfil/perfil_03.png" alt="foto de perfil 3" style="width: 200px;">
+        </div>
 
         <button type="submit">Enviar</button>
     </form>
