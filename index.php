@@ -35,5 +35,7 @@
         <p>Estado</p>
         <p><a href="">Modificar</a> <a href="">Borrar</a></p>
     </div>
+
+    <button>Nueva Publicación</button>
 </body>
 </html>

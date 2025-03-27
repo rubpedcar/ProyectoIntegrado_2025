@@ -14,6 +14,7 @@
         <p>Email: <input type="text" name="email"></p>
         <p>Contraseña: <input type="password" name="password"></p>
         <p>Elige una foto de perfil:</p>
+        <p>Foto 1, Foto 2, Foto 3, Foto 4</p>
 
         <button type="submit">Enviar</button>
     </form>
