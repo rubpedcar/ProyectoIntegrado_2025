@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse</title>
+</head>
+<body>
+    <header>
+        <a href="../index.html">Volver a la página principal</a>
+        <p id="mensaje" style="color:red;font-weight:bold"></p>
+    </header>
+
+    <h1>Registrarse</h1>
+
+    <form id="form">
+        <p><input type="text" id="formNombre" placeholder="Nombre"></p>
+        <p><input type="email" id="formEmail" placeholder="Email"></p>
+        <p><input type="password" id="formPsswrd" placeholder="Contraseña"></p>
+        <p><input type="password" id="formPsswrd2" placeholder="Repite la contraseña"></p>
+        <input type="submit" value="Registrarse">
+        <input type="reset" value="Borrar">
+    </form>
+
+
+    <script>
+        document.getElementById("form").addEventListener("submit", function (event) {
+            validaciones(event);
+        });
+
+        function validaciones(event)
+        {
+            event.preventDefault();
+            let formNombre = document.getElementById("formNombre").value;
+            let formEmail = document.getElementById("formEmail").value;
+            let formPsswrd = document.getElementById("formPsswrd").value;
+            let formPsswrd2 = document.getElementById("formPsswrd2").value;
+
+            if (formNombre == "" || formEmail == "" || formPsswrd == "" || formPsswrd2 == "") 
+            {
+                document.getElementById("mensaje").textContent = "Por favor, completa todos los campos.";
+                return;
+            }
+            else
+            {
+                if(formNombre.length < 6) 
+                {
+                    document.getElementById("mensaje").textContent = "El nombre debe tener al menos 6 caracteres.";
+                    return;
+                }
+                else if(!formEmail.includes("@") || !formEmail.includes(".")) 
+                {
+                    document.getElementById("mensaje").textContent = "Por favor, introduce un email válido.";
+                    return;
+                }
+                else if(formPsswrd.length < 5 || formPsswrd2.length < 5) 
+                {
+                    document.getElementById("mensaje").textContent = "La contraseña debe tener al menos 5 caracteres.";
+                    return;
+                }
+                else if(formPsswrd != formPsswrd2) 
+                {
+                    document.getElementById("mensaje").textContent = "Las contraseñas no coinciden.";
+                    return;
+                }
+                else
+                {
+                    document.getElementById("mensaje").textContent = "";
+                    enviarDatos(event, formNombre, formEmail, formPsswrd);
+                }
+            }
+        }
+
+        function enviarDatos(event, nombre, email, psswrd) {
+            event.preventDefault();
+
+            let formNombre = nombre;
+            let formEmail = email;
+            let formPsswrd = psswrd;
+
+            const datos = { formNombre, formEmail, formPsswrd};
+            console.log(datos);
+
+            fetch("http://localhost/hlc/tarde/Backend_ProyectoIntegrado/usuarios.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(datos)
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("mensaje").textContent = data.mensaje;
+                if (!data.error) {
+                    
+                    alert(data.mensaje);
+
+                    window.location.href = "../index.html";
+                }
+                else
+                {
+                    alert(data.mensaje);
+                }
+            })
+            .catch(err => {
+                //console.log(err);
+                alert("Usuario creado");
+                window.location.href = "../index.html";
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    
+</head>
+
+<body>
+    <header><a href="../index.html">Volver a la página principal</a></header>
+
+    <p id="mensaje" style="color:red;font-weight:bold"></p>
+
+    <form id="form" method="post">
+        <p><input type="text" id="formEmail" placeholder="Email"></p>
+        <p><input type="password" id="formPsswrd" placeholder="Contraseña"></p>
+        <input type="submit" value="Enviar">
+        <input type="reset" value="Borrar">
+    </form>
+
+    <p>¿No tienes una cuenta? <a href="registro.html">Regístrate aquí.</a></p>
+
+
+    <script>
+
+        document.getElementById("form").addEventListener("submit", function(event) {
+            enviarDatos(event);
+        });
+
+        
+        function enviarDatos(event) 
+        {
+            event.preventDefault();
+
+            let formEmail = document.getElementById("formEmail").value;
+            let formPsswrd = document.getElementById("formPsswrd").value;
+
+            const datos = { formEmail, formPsswrd };
+            console.log(formEmail, formPsswrd);
+
+            //alert("Datos enviados: " + JSON.stringify(datos));
+
+            fetch("http://localhost/hlc/tarde/Backend_ProyectoIntegrado/acceso/acceso.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(datos)
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("mensaje").textContent = data.mensaje;
+                if (!data.error && data.mensaje === "OK") {
+                    // Redirige o haz algo visible
+                    
+                    const id = localStorage.setItem("id", data.id)
+                    const nombre = localStorage.setItem("nombre", data.nombre);
+                    const email = localStorage.setItem("email", data.email);
+                    const rol = localStorage.setItem("rol", data.rol);
+
+                    window.location.href = "../index.html"; // O la página que corresponda
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+    </script>
+</body>
+
+</html>
