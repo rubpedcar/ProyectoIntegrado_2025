@@ -81,7 +81,7 @@ function publicacionesUser(id) {
                     let divEstado = document.createElement("p");
 
                     divNombre.textContent = publicacion.nombre;
-                    divDesc.textContent = publicacion.descripcion;
+                    divDesc.textContent = "Descripción: " + publicacion.descripcion;
                     divImagen.setAttribute("src", "img/" + publicacion.imagen);
                     divImagen.setAttribute("width", "400px");
 
@@ -179,7 +179,7 @@ function publicaciones(event) {
                 let divImagen = document.createElement("img");
 
                 divNombre.textContent = publicacion.nombre;
-                divDesc.textContent = publicacion.descripcion;
+                divDesc.textContent = "Descripción: " + publicacion.descripcion;
                 divImagen.setAttribute("src", "img/" + publicacion.imagen);
                 divImagen.setAttribute("width", "400px");
 
