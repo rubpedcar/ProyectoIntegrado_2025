@@ -20,7 +20,7 @@
             <option value="" disabled selected>Categorías</option>
         </select></p>
 
-        <p><input type="file" name="foto" id="formFoto"></p>
+        <p><input type="file" name="foto" id="formImg" accept="image/*"></p>
         <input type="submit" value="Subir">
         <input type="reset" value="Borrar">
     </form>
@@ -58,6 +58,56 @@
                     document.getElementById('form').appendChild(p);
                 });
         }
+
+
+
+        document.getElementById("form").addEventListener("submit", function(event){
+            validaciones(event);
+        });
+
+        function validaciones(event)
+        {
+            event.preventDefault();
+
+            let mensaje = document.getElementById("mensaje");
+
+            let formNombre = document.getElementById("formNombre").value;
+            let formDescripcion = document.getElementById("formDescripcion").value;
+            let formCategorias = document.getElementById("formCategorias").value;
+            let formImg = document.getElementById("formImg").value;
+
+            
+            if(formNombre == "" || formDescripcion == "" || formCategorias == "")
+            {
+                mensaje.innerText = "Debes rellenar todos los campos.";
+            }
+            else
+            {
+                mensaje.innerText = "";
+            }
+            
+        }
+
+        document.getElementById("formImg").addEventListener("change", function(){
+            let mensaje = document.getElementById("mensaje");
+            let formImg = document.getElementById("formImg").value;
+            const archivo = this.files[0];
+
+                if (archivo) 
+                {
+                    const limiteTamano = 16 * 1024 * 1024; // 16 MB en bytes
+
+                    if (archivo.size > limiteTamano) 
+                    {
+                        mensaje.textContent = 'El archivo excede el tamaño máximo de 16 MB.';
+                        formImg.value = ''; 
+                    } 
+                    else 
+                    {
+                        mensaje.innerText = 'Archivo válido.';
+                    }
+                }
+        });
     </script>
 </body>
 </html>
