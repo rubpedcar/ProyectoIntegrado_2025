@@ -81,32 +81,47 @@
             {
                 mensaje.innerText = "Debes rellenar todos los campos.";
             }
-            else
+            else if(validarImg(event))
             {
-                mensaje.innerText = "";
+                mensaje.innerText = "Ok";
             }
             
         }
 
-        document.getElementById("formImg").addEventListener("change", function(){
+
+
+
+        function validarImg(event)
+        {
+            
+        }
+
+        document.getElementById("formImg").addEventListener("change", function(event){
+            console.log(this.files);
+            //validarImg(event);
+
+            event.preventDefault();
+
+            //let res = true;
             let mensaje = document.getElementById("mensaje");
             let formImg = document.getElementById("formImg").value;
             const archivo = this.files[0];
+            console.log(this.files);
 
-                if (archivo) 
+            if (archivo) 
+            {
+                const limite = 16 * 1024 * 1024; // 16 MB en bytes.
+
+                if (archivo.size > limite) 
                 {
-                    const limiteTamano = 16 * 1024 * 1024; // 16 MB en bytes
+                    mensaje.textContent = 'El archivo excede el tamaño máximo de 16 MB.';
+                    formImg.value = ''; 
+                    //res = false;
+                } 
 
-                    if (archivo.size > limiteTamano) 
-                    {
-                        mensaje.textContent = 'El archivo excede el tamaño máximo de 16 MB.';
-                        formImg.value = ''; 
-                    } 
-                    else 
-                    {
-                        mensaje.innerText = 'Archivo válido.';
-                    }
-                }
+
+                //return res;
+            }
         });
     </script>
 </body>
