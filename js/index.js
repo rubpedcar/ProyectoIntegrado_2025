@@ -28,6 +28,24 @@ document.addEventListener("DOMContentLoaded", function (event) {
         enlace.setAttribute("href", "");
         enlace.setAttribute("onclick", "logout()");
         cabecera.innerText = "Publicaciones de " + nombre;
+
+        let divButton = document.createElement("button");
+        divButton.innerText = "Nueva Publicación";
+
+        let divNueva = document.createElement("a");
+        divNueva.setAttribute("href", "crearPublicacion.html");
+        divNueva.appendChild(divButton);
+
+        let divButton2 = document.createElement("button");
+        divButton2.innerText = "Mis Datos";
+
+        let divPerfil = document.createElement("a");
+        divPerfil.setAttribute("href", "perfil.html");
+        divPerfil.appendChild(divButton2);
+
+
+        document.getElementById('divCont').appendChild(divPerfil);
+        document.getElementById('divCont').appendChild(divNueva);
         
         try {
             console.log(id);
@@ -59,15 +77,7 @@ function publicacionesUser(id) {
             
 
             if (data != "") {
-
-                let divButton = document.createElement("button");
-                divButton.innerText = "Nueva Publicación";
-
-                let divNueva = document.createElement("a");
-                divNueva.setAttribute("href", "crearPublicacion.html");
-                divNueva.appendChild(divButton);
-
-                document.getElementById('divCont').appendChild(divNueva);
+ 
 
                 data.forEach(publicacion => {
 
