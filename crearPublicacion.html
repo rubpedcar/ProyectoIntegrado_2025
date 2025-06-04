@@ -21,8 +21,8 @@
         </select></p>
 
         <p><input type="file" name="foto" id="formImg" accept="image/*"></p>
-        <input type="submit" value="Subir">
-        <input type="reset" value="Borrar">
+        <input type="submit" value="Subir" id="btn" disabled>
+        <input type="reset" value="Borrar" id="borrar">
     </form>
 
 
@@ -30,6 +30,13 @@
         document.addEventListener("DOMContentLoaded", function(event){
             event.preventDefault();
             getCategorias();
+        });
+
+        document.getElementById("borrar").addEventListener("click", function(){
+            let btn = document.getElementById("btn");
+            document.getElementById("mensaje").innerText = "";
+
+            btn.disabled = true;
         });
 
 
@@ -81,7 +88,7 @@
             {
                 mensaje.innerText = "Debes rellenar todos los campos.";
             }
-            else if(validarImg(event))
+            else
             {
                 mensaje.innerText = "Ok";
             }
@@ -91,11 +98,6 @@
 
 
 
-        function validarImg(event)
-        {
-            
-        }
-
         document.getElementById("formImg").addEventListener("change", function(event){
             console.log(this.files);
             //validarImg(event);
@@ -103,13 +105,16 @@
             event.preventDefault();
 
             //let res = true;
+            let btn = document.getElementById("btn");
+
             let mensaje = document.getElementById("mensaje");
             let formImg = document.getElementById("formImg").value;
-            const archivo = this.files[0];
-            console.log(this.files);
+            
+            console.log(formImg);
 
-            if (archivo) 
+            if (formImg != "") 
             {
+                const archivo = this.files[0];
                 const limite = 16 * 1024 * 1024; // 16 MB en bytes.
 
                 if (archivo.size > limite) 
@@ -117,6 +122,12 @@
                     mensaje.textContent = 'El archivo excede el tamaño máximo de 16 MB.';
                     formImg.value = ''; 
                     //res = false;
+
+                    btn.disabled = true;
+                }
+                else
+                {
+                    btn.disabled = false;
                 } 
 
 

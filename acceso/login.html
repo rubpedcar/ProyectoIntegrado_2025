@@ -51,7 +51,7 @@
             })
             .then(res => res.json())
             .then(data => {
-                document.getElementById("mensaje").textContent = data.mensaje;
+                
                 if (!data.error && data.mensaje === "OK") {
                     // Redirige o haz algo visible
                     
@@ -61,6 +61,10 @@
                     const rol = localStorage.setItem("rol", data.rol);
 
                     window.location.href = "../index.html"; // O la página que corresponda
+                }
+                else
+                {
+                    document.getElementById("mensaje").textContent = data.mensaje;
                 }
             })
             .catch(err => {

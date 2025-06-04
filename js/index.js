@@ -146,15 +146,6 @@ function publicacionesUser(id) {
                 let divMess = document.createElement("p");
                 divMess.textContent = "No hay publicaciones.";
                 document.getElementById('divCont').appendChild(divMess);
-
-                let divButton = document.createElement("button");
-                divButton.innerText = "Nueva Publicación";
-
-                let divNueva = document.createElement("a");
-                divNueva.setAttribute("href", "crearPublicacion.html");
-                divNueva.appendChild(divButton);
-
-                document.getElementById('divCont').appendChild(divNueva);
             }
 
 
