@@ -56,6 +56,8 @@
                     data.forEach(categoria => {
                         const option = document.createElement('option');
                         option.innerText = categoria.categoria;
+                        option.value = categoria.id;
+                        
                         contCate.appendChild(option);
                     });
                 })
@@ -90,7 +92,7 @@
             }
             else
             {
-                mensaje.innerText = "Ok";
+                enviarDatos();
             }
             
         }
@@ -134,6 +136,39 @@
                 //return res;
             }
         });
+
+
+        // Método que hace el llamado para crear la publicación.
+        function enviarDatos()
+        {
+            let usuario_id = localStorage.getItem("id");
+            let categoria_id = document.getElementById("formCategorias").value;
+            let nombre = document.getElementById("formNombre").value;
+            let descripcion = document.getElementById("formDescripcion").value;
+            let imagen = document.getElementById("formImg").value.substring(12); // Se le hace substring para sacar el nombre de la imagen de la URL.
+
+            const datos = {usuario_id, categoria_id, nombre, descripcion, imagen};
+
+            fetch("http://localhost/hlc/tarde/Backend_ProyectoIntegrado/publicaciones.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(datos)
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("mensaje").textContent = data.mensaje;
+                
+                alert(data.mensaje);
+
+                window.location.href = "index.html";
+            })
+            .catch(err => {
+                console.log(err);
+                document.getElementById("mensaje").textContent = data.mensaje;
+            });
+        }
     </script>
 </body>
 </html>
