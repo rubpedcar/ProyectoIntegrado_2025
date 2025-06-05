@@ -149,6 +149,14 @@ function publicacionesUser(id) {
                         .then(data => {
 
                             divEstado.textContent = "Estado: " + data.estado;
+
+                            if(data.id != 1 || id == 1)
+                            {
+                                let modificarEstado = document.createElement("a");
+                                modificarEstado.setAttribute("href", "modificarPublicacion.html?idPublicacion=" + publicacion.id);
+                                modificarEstado.innerText = "Modificar Publicación";
+                                divFoto.appendChild(modificarEstado);
+                            }
                         })
                         .catch(error => {
 
@@ -163,13 +171,7 @@ function publicacionesUser(id) {
                     divFoto.appendChild(divImagen);
                     divFoto.appendChild(divEstado);
 
-                    if(id == 1)
-                    {
-                        let modificarEstado = document.createElement("a");
-                        modificarEstado.setAttribute("href", "modificarPublicacion.html");
-                        modificarEstado.innerText = "Modificar el Estado";
-                        divFoto.appendChild(modificarEstado);
-                    }
+                    
                     
                     document.getElementById('divCont').appendChild(divFoto);
                 });

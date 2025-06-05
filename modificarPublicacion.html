@@ -6,6 +6,73 @@
     <title>Modificar Publicación</title>
 </head>
 <body>
+    <header>
+        <a href="index.html">Volver a la página principal</a>
+        <p id="mensaje" style="color:red;font-weight:bold"></p>
+    </header>
     
+    <form id="form">
+        <p><input type="text" id="formNombre" placeholder="Nombre de la Publicación"></p>
+        <p><textarea id="formDescripcion" placeholder="Descripción..." cols="20" rows="5"></textarea></p>
+        <p><select id="formCategorias">
+            <option value="" disabled selected>Categorías</option>
+        </select></p>
+    </form>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event){
+            event.preventDefault();
+
+            const parametros = new URLSearchParams(window.location.search);
+
+            const idPublicacion = parametros.get("idPublicacion");
+
+            if(idPublicacion != null)
+            {
+                rellenarDatos();
+            }
+            else
+            {
+                window.location.href = "index.html";
+            }
+        });
+
+        function rellenarDatos()
+        {
+            document.getElementById("mensaje").innerText = "Rellenando...";
+            getCategorias();
+        }
+
+        document.getElementById("formCategorias").set
+        function getCategorias() {
+
+            let contCate = document.getElementById("formCategorias");
+
+            fetch(`http://localhost/hlc/tarde/Backend_ProyectoIntegrado/categorias.php`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Hubo un problema.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+
+                    data.forEach(categoria => {
+                        const option = document.createElement('option');
+                        option.innerText = categoria.categoria;
+                        option.value = categoria.id;
+                        
+                        contCate.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    const p = document.createElement('p');
+                    p.textContent = error;
+                    document.getElementById('form').appendChild(p);
+                });
+        }
+
+    </script>
 </body>
 </html>
