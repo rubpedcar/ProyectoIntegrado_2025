@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     const enlace = document.getElementById("enlaceSesion");
     const div = document.getElementById('divCont');
 
-    console.log("Idkjcbcaskd: " + id);
+    console.log("Id: " + id);
     console.log("Rol: " +rol);
 
     if (rol == null) {
@@ -20,7 +20,30 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     }
     else if (rol == 1) {
-        cabecera.innerHTML.textContent = "Admin";
+        enlace.innerText = "Cerrar sesión";
+        enlace.setAttribute("href", "");
+        enlace.setAttribute("onclick", "logout()");
+        cabecera.innerText = "Publicaciones de " + nombre;
+
+        let divButton2 = document.createElement("button");
+        divButton2.innerText = "Mis Datos";
+
+        let divPerfil = document.createElement("a");
+        divPerfil.setAttribute("href", "perfil.html");
+        divPerfil.appendChild(divButton2);
+
+
+        document.getElementById('divCont').appendChild(divPerfil);
+
+        try 
+        {
+            console.log(id);
+            publicacionesUser(id);
+        } 
+        catch (error) 
+        {
+            console.log(error);
+        }
     }
     else if (rol == 2) {
 
@@ -47,10 +70,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
         document.getElementById('divCont').appendChild(divPerfil);
         document.getElementById('divCont').appendChild(divNueva);
         
-        try {
+        try 
+        {
             console.log(id);
             publicacionesUser(id);
-        } catch (error) {
+        } 
+        catch (error) 
+        {
             console.log(error);
         }
     }
@@ -128,7 +154,7 @@ function publicacionesUser(id) {
 
                         });
 
-
+                    
 
                     divFoto.appendChild(divNombre);
                     divFoto.appendChild(divDesc);
@@ -137,6 +163,13 @@ function publicacionesUser(id) {
                     divFoto.appendChild(divImagen);
                     divFoto.appendChild(divEstado);
 
+                    if(id == 1)
+                    {
+                        let modificarEstado = document.createElement("a");
+                        modificarEstado.setAttribute("href", "modificarPublicacion.html");
+                        modificarEstado.innerText = "Modificar el Estado";
+                        divFoto.appendChild(modificarEstado);
+                    }
                     
                     document.getElementById('divCont').appendChild(divFoto);
                 });
