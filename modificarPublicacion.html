@@ -27,12 +27,28 @@
         <p><input type="file" name="foto" id="formImg" accept="image/*"></p>
         <input type="submit" value="Subir" id="btn" disabled>
         <input type="reset" value="Borrar" id="borrar">
+        <br><br>
+        <a href="" class="confirmacion_borrar">Eliminar Publicación</a>
     </form>
 
 
     <script>
         let idPublicacion;
 
+        // Este fragmento muestra un alert para confirmar la eliminación.
+        var elementos = document.getElementsByClassName("confirmacion_borrar");
+        var confirmFunc = function (e)
+        {
+            if (!confirm('Está seguro de que desea borrar este registro?'))
+            e.preventDefault();
+        };
+            
+        for (var i = 0, l = elementos.length; i < l; i++) 
+        {
+            elementos[i].addEventListener('click', confirmFunc, false);
+        }
+
+        // Botón Reset.
         document.getElementById("borrar").addEventListener("click", function(){
             let btn = document.getElementById("btn");
             document.getElementById("mensaje").innerText = "";
@@ -40,6 +56,7 @@
             btn.disabled = true;
         });
 
+        // Al cargar el documento, se obtiene el id de la publicación a modificar.
         document.addEventListener("DOMContentLoaded", function(event){
             event.preventDefault();
 
@@ -57,6 +74,8 @@
             }
         });
 
+
+        // Función que rellena los campos con la información de la publicación.
         function rellenarDatos(idPublicacion)
         {
             //getCategorias();
@@ -82,6 +101,7 @@
         }
 
         
+        // Función que rellena el select de categorías.
         function getCategorias(selectedId = null) {
 
             let contCate = document.getElementById("formCategorias");
@@ -120,11 +140,10 @@
 
         document.getElementById("formImg").addEventListener("change", function(event){
             console.log(this.files);
-            //validarImg(event);
+
 
             event.preventDefault();
 
-            //let res = true;
             let btn = document.getElementById("btn");
 
             let mensaje = document.getElementById("mensaje");
@@ -141,7 +160,6 @@
                 {
                     mensaje.textContent = 'El archivo excede el tamaño máximo de 16 MB.';
                     formImg.value = ''; 
-                    //res = false;
 
                     btn.disabled = true;
                 }
@@ -150,15 +168,13 @@
                     btn.disabled = false;
                 } 
 
-
-                //return res;
             }
         });
 
 
 
 
-
+        // Al hacer click en enviar, se llama a la función de validaciones.
         document.getElementById("form").addEventListener("submit", function(event){
             validaciones(event);
         });
@@ -187,7 +203,7 @@
         }
 
 
-
+        // Una vez se han validado los datos, se envían para modificar la publicación.
         function enviarDatos()
         {
 
@@ -198,9 +214,7 @@
 
             console.log(imagen);
 
-            //const datos = {usuario_id, categoria_id, nombre, descripcion, imagen};
-
-            const formData = new FormData();
+            const formData = new FormData(); // Se usa formData para poder enviar la imagen.
 
             formData.append("idPublicacion", idPublicacion);
             formData.append("categoria_id", categoria_id);
