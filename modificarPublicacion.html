@@ -28,25 +28,13 @@
         <input type="submit" value="Subir" id="btn" disabled>
         <input type="reset" value="Borrar" id="borrar">
         <br><br>
-        <a href="" class="confirmacion_borrar">Eliminar Publicación</a>
+        <a href="#" class="confirmacion_borrar" id="btnEliminar">Eliminar Publicación</a>
     </form>
 
 
     <script>
         let idPublicacion;
 
-        // Este fragmento muestra un alert para confirmar la eliminación.
-        var elementos = document.getElementsByClassName("confirmacion_borrar");
-        var confirmFunc = function (e)
-        {
-            if (!confirm('Está seguro de que desea borrar este registro?'))
-            e.preventDefault();
-        };
-            
-        for (var i = 0, l = elementos.length; i < l; i++) 
-        {
-            elementos[i].addEventListener('click', confirmFunc, false);
-        }
 
         // Botón Reset.
         document.getElementById("borrar").addEventListener("click", function(){
@@ -137,7 +125,7 @@
 
 
 
-
+        // Validación de la imagen y activación del botón de subir.
         document.getElementById("formImg").addEventListener("change", function(event){
             console.log(this.files);
 
@@ -240,6 +228,36 @@
             });
         }
 
+
+        // Función para eliminar la publicación.
+        document.getElementById("btnEliminar").addEventListener("click", function(event){
+            event.preventDefault();
+
+            if(confirm("¿Estás seguro de que quieres eliminar esta publicación?"))
+            {
+                const datos = {idPublicacion};
+
+                fetch("http://localhost/hlc/tarde/Backend_ProyectoIntegrado/publicaciones.php", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(datos)
+                })
+                .then(res => res.text())
+                .then(data => {
+                    document.getElementById("mensaje").textContent = data.mensaje;
+                    
+                    console.log(data);
+                    alert("Publicación Eliminada.");
+                    window.location.href = "index.html";
+                })
+                .catch(err => {
+                    console.log(err);
+                    
+                });
+            }
+        });
     </script>
 </body>
 </html>
