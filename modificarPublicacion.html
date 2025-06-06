@@ -12,25 +12,44 @@
     </header>
     
     <form id="form">
+        <img id="formImagen" style="width: 800px;">
+
+        <br><label for="">Nombre: </label>
         <p><input type="text" id="formNombre" placeholder="Nombre de la Publicación"></p>
+
+        <label for="">Descripción: </label>
         <p><textarea id="formDescripcion" placeholder="Descripción..." cols="20" rows="5"></textarea></p>
+
         <p><select id="formCategorias">
             <option value="" disabled selected>Categorías</option>
         </select></p>
+
+        <p><input type="file" name="foto" id="formImg" accept="image/*"></p>
+        <input type="submit" value="Subir" id="btn" disabled>
+        <input type="reset" value="Borrar" id="borrar">
     </form>
 
 
     <script>
+        let idPublicacion;
+
+        document.getElementById("borrar").addEventListener("click", function(){
+            let btn = document.getElementById("btn");
+            document.getElementById("mensaje").innerText = "";
+
+            btn.disabled = true;
+        });
+
         document.addEventListener("DOMContentLoaded", function(event){
             event.preventDefault();
 
             const parametros = new URLSearchParams(window.location.search);
-
-            const idPublicacion = parametros.get("idPublicacion");
+            idPublicacion = parametros.get("idPublicacion");
+            console.log(idPublicacion);
 
             if(idPublicacion != null)
             {
-                rellenarDatos();
+                rellenarDatos(idPublicacion);
             }
             else
             {
@@ -38,14 +57,32 @@
             }
         });
 
-        function rellenarDatos()
+        function rellenarDatos(idPublicacion)
         {
-            document.getElementById("mensaje").innerText = "Rellenando...";
-            getCategorias();
+            //getCategorias();
+
+            fetch(`http://localhost/hlc/tarde/Backend_ProyectoIntegrado/publicaciones.php?idPublicacion=` + idPublicacion)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Hubo un problema.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('formImagen').src = "http://localhost/hlc/tarde/Backend_ProyectoIntegrado/" + data.imagen;
+                    document.getElementById('formNombre').value = data.nombre;
+                    document.getElementById('formDescripcion').value = data.descripcion;
+                    document.getElementById('formCategorias').value = data.categoria_id;
+
+                    getCategorias(data.categoria_id); // Se llama a la función para que seleccione la categoría.
+                })
+                .catch(error => {
+                    document.getElementById('mensaje').innerText = error;
+                });
         }
 
-        document.getElementById("formCategorias").set
-        function getCategorias() {
+        
+        function getCategorias(selectedId = null) {
 
             let contCate = document.getElementById("formCategorias");
 
@@ -62,6 +99,11 @@
                         const option = document.createElement('option');
                         option.innerText = categoria.categoria;
                         option.value = categoria.id;
+
+                        if (selectedId && categoria.id == selectedId) 
+                        {
+                            option.selected = true;
+                        }
                         
                         contCate.appendChild(option);
                     });
@@ -71,6 +113,117 @@
                     p.textContent = error;
                     document.getElementById('form').appendChild(p);
                 });
+        }
+
+
+
+
+        document.getElementById("formImg").addEventListener("change", function(event){
+            console.log(this.files);
+            //validarImg(event);
+
+            event.preventDefault();
+
+            //let res = true;
+            let btn = document.getElementById("btn");
+
+            let mensaje = document.getElementById("mensaje");
+            let formImg = document.getElementById("formImg").value;
+            
+            console.log(formImg);
+
+            if (formImg != "") 
+            {
+                const archivo = this.files[0];
+                const limite = 16 * 1024 * 1024; // 16 MB en bytes.
+
+                if (archivo.size > limite) 
+                {
+                    mensaje.textContent = 'El archivo excede el tamaño máximo de 16 MB.';
+                    formImg.value = ''; 
+                    //res = false;
+
+                    btn.disabled = true;
+                }
+                else
+                {
+                    btn.disabled = false;
+                } 
+
+
+                //return res;
+            }
+        });
+
+
+
+
+
+        document.getElementById("form").addEventListener("submit", function(event){
+            validaciones(event);
+        });
+
+        function validaciones(event)
+        {
+            event.preventDefault();
+
+            let mensaje = document.getElementById("mensaje");
+
+            let formNombre = document.getElementById("formNombre").value;
+            let formDescripcion = document.getElementById("formDescripcion").value;
+            let formCategorias = document.getElementById("formCategorias").value;
+            let formImg = document.getElementById("formImg").value;
+
+            
+            if(formNombre == "" || formDescripcion == "" || formCategorias == "")
+            {
+                mensaje.innerText = "Debes rellenar todos los campos.";
+            }
+            else
+            {
+                enviarDatos();
+            }
+            
+        }
+
+
+
+        function enviarDatos()
+        {
+
+            let categoria_id = document.getElementById("formCategorias").value;
+            let nombre = document.getElementById("formNombre").value;
+            let descripcion = document.getElementById("formDescripcion").value;
+            let imagen = document.getElementById("formImg").files[0];
+
+            console.log(imagen);
+
+            //const datos = {usuario_id, categoria_id, nombre, descripcion, imagen};
+
+            const formData = new FormData();
+
+            formData.append("idPublicacion", idPublicacion);
+            formData.append("categoria_id", categoria_id);
+            formData.append("nombre", nombre);
+            formData.append("descripcion", descripcion);
+            formData.append("imagen", imagen);
+
+            fetch("http://localhost/hlc/tarde/Backend_ProyectoIntegrado/modificarPublicacion.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.text())
+            .then(data => {
+                document.getElementById("mensaje").textContent = data.mensaje;
+                
+                console.log(data);
+                alert("Publicación Actualizada.");
+                window.location.href = "index.html";
+            })
+            .catch(err => {
+                console.log(err);
+                
+            });
         }
 
     </script>
