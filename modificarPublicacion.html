@@ -24,17 +24,21 @@
             <option value="" disabled selected>Categorías</option>
         </select></p>
 
+        <p><select id="formEstados" visibility="hidden" disabled>
+            <option value="" disabled selected>Estados</option>
+        </select></p>
+
         <p><input type="file" name="foto" id="formImg" accept="image/*"></p>
         <input type="submit" value="Subir" id="btn" disabled>
         <input type="reset" value="Borrar" id="borrar">
         <br><br>
-        <a href="#" class="confirmacion_borrar" id="btnEliminar">Eliminar Publicación</a>
+        <a href="#" id="btnEliminar">Eliminar Publicación</a>
     </form>
 
 
     <script>
         let idPublicacion;
-
+        const idUser = localStorage.getItem("id");
 
         // Botón Reset.
         document.getElementById("borrar").addEventListener("click", function(){
@@ -82,6 +86,15 @@
                     document.getElementById('formCategorias').value = data.categoria_id;
 
                     getCategorias(data.categoria_id); // Se llama a la función para que seleccione la categoría.
+
+                    // Si el usuario es admin, podrá modificar el estado.
+                    if(idUser == 1)
+                    {
+                        document.getElementById("formEstados").style.visibility = "visible";
+                        document.getElementById("formEstados").disabled = false;
+                        getEstados(data.estado_id);
+                    }
+
                 })
                 .catch(error => {
                     document.getElementById('mensaje').innerText = error;
@@ -120,6 +133,40 @@
                     const p = document.createElement('p');
                     p.textContent = error;
                     document.getElementById('form').appendChild(p);
+                });
+        }
+
+
+        // Función que rellena el select de estados.
+        function getEstados(selectedId = null) {
+
+            let contEst = document.getElementById("formEstados");
+
+            fetch(`http://localhost/hlc/tarde/Backend_ProyectoIntegrado/estados.php`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Hubo un problema.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+
+                    data.forEach(estado => {
+                        const option = document.createElement('option');
+                        option.innerText = estado.estado;
+                        option.value = estado.id;
+
+                        if (selectedId && estado.id == selectedId) 
+                        {
+                            option.selected = true;
+                        }
+                        
+                        contEst.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    const p = document.createElement('p');
+                    document.getElementById("mensaje").innerText = error;
                 });
         }
 
@@ -195,37 +242,77 @@
         function enviarDatos()
         {
 
-            let categoria_id = document.getElementById("formCategorias").value;
-            let nombre = document.getElementById("formNombre").value;
-            let descripcion = document.getElementById("formDescripcion").value;
-            let imagen = document.getElementById("formImg").files[0];
+            // Si el usuario es admin, llamará al modificar que incluye el estado, en caso contrario, llamará al modificar normal.
+            if(idUser == 1)
+            {
+                let idEstado = document.getElementById("formEstados").value;
+                let categoria_id = document.getElementById("formCategorias").value;
+                let nombre = document.getElementById("formNombre").value;
+                let descripcion = document.getElementById("formDescripcion").value;
+                let imagen = document.getElementById("formImg").files[0];
 
-            console.log(imagen);
+                console.log(imagen);
 
-            const formData = new FormData(); // Se usa formData para poder enviar la imagen.
+                const formData = new FormData(); // Se usa formData para poder enviar la imagen.
 
-            formData.append("idPublicacion", idPublicacion);
-            formData.append("categoria_id", categoria_id);
-            formData.append("nombre", nombre);
-            formData.append("descripcion", descripcion);
-            formData.append("imagen", imagen);
+                formData.append("idPublicacion", idPublicacion);
+                formData.append("categoria_id", categoria_id);
+                formData.append("nombre", nombre);
+                formData.append("descripcion", descripcion);
+                formData.append("imagen", imagen);
+                formData.append("estado_id", idEstado);
 
-            fetch("http://localhost/hlc/tarde/Backend_ProyectoIntegrado/modificarPublicacion.php", {
-                method: "POST",
-                body: formData
-            })
-            .then(res => res.text())
-            .then(data => {
-                document.getElementById("mensaje").textContent = data.mensaje;
-                
-                console.log(data);
-                alert("Publicación Actualizada.");
-                window.location.href = "index.html";
-            })
-            .catch(err => {
-                console.log(err);
-                
-            });
+                fetch("http://localhost/hlc/tarde/Backend_ProyectoIntegrado/estados.php", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(res => res.text())
+                .then(data => {
+                    document.getElementById("mensaje").textContent = data.mensaje;
+                    
+                    console.log(data);
+                    alert("Publicación Actualizada.");
+                    window.location.href = "index.html";
+                })
+                .catch(err => {
+                    console.log(err);
+                    
+                });
+            }
+            else
+            {
+                let categoria_id = document.getElementById("formCategorias").value;
+                let nombre = document.getElementById("formNombre").value;
+                let descripcion = document.getElementById("formDescripcion").value;
+                let imagen = document.getElementById("formImg").files[0];
+
+                console.log(imagen);
+
+                const formData = new FormData(); // Se usa formData para poder enviar la imagen.
+
+                formData.append("idPublicacion", idPublicacion);
+                formData.append("categoria_id", categoria_id);
+                formData.append("nombre", nombre);
+                formData.append("descripcion", descripcion);
+                formData.append("imagen", imagen);
+
+                fetch("http://localhost/hlc/tarde/Backend_ProyectoIntegrado/modificarPublicacion.php", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(res => res.text())
+                .then(data => {
+                    document.getElementById("mensaje").textContent = data.mensaje;
+                    
+                    console.log(data);
+                    alert("Publicación Actualizada.");
+                    window.location.href = "index.html";
+                })
+                .catch(err => {
+                    console.log(err);
+                    
+                });
+            }
         }
 
 
