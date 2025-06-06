@@ -118,7 +118,7 @@ function publicacionesUser(id) {
 
                     divNombre.textContent = publicacion.nombre;
                     divDesc.textContent = "Descripción: " + publicacion.descripcion;
-                    divImagen.setAttribute("src", "img/" + publicacion.imagen);
+                    divImagen.setAttribute("src", "http://localhost/hlc/tarde/Backend_ProyectoIntegrado/" + publicacion.imagen);
                     divImagen.setAttribute("width", "400px");
 
                     // Se obtiene el nombre de la categoría.
@@ -216,7 +216,7 @@ function publicaciones(event) {
 
                 divNombre.textContent = publicacion.nombre;
                 divDesc.textContent = "Descripción: " + publicacion.descripcion;
-                divImagen.setAttribute("src", "img/" + publicacion.imagen);
+                divImagen.setAttribute("src", "http://localhost/hlc/tarde/Backend_ProyectoIntegrado/" + publicacion.imagen);
                 divImagen.setAttribute("width", "400px");
 
 

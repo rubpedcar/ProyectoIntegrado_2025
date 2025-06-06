@@ -145,28 +145,34 @@
             let categoria_id = document.getElementById("formCategorias").value;
             let nombre = document.getElementById("formNombre").value;
             let descripcion = document.getElementById("formDescripcion").value;
-            let imagen = document.getElementById("formImg").value.substring(12); // Se le hace substring para sacar el nombre de la imagen de la URL.
+            let imagen = document.getElementById("formImg").files[0];
 
-            const datos = {usuario_id, categoria_id, nombre, descripcion, imagen};
+            console.log(imagen);
+
+            //const datos = {usuario_id, categoria_id, nombre, descripcion, imagen};
+
+            const formData = new FormData();
+            formData.append("usuario_id", usuario_id);
+            formData.append("categoria_id", categoria_id);
+            formData.append("nombre", nombre);
+            formData.append("descripcion", descripcion);
+            formData.append("imagen", imagen);
 
             fetch("http://localhost/hlc/tarde/Backend_ProyectoIntegrado/publicaciones.php", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(datos)
+                body: formData
             })
-            .then(res => res.json())
+            .then(res => res.text())
             .then(data => {
                 document.getElementById("mensaje").textContent = data.mensaje;
                 
-                alert(data.mensaje);
-
+                console.log(data);
+                alert("Publicación Creada.");
                 window.location.href = "index.html";
             })
             .catch(err => {
                 console.log(err);
-                document.getElementById("mensaje").textContent = data.mensaje;
+                
             });
         }
     </script>
