@@ -32,8 +32,16 @@ document.addEventListener("DOMContentLoaded", function (event) {
         divPerfil.setAttribute("href", "perfil.html");
         divPerfil.appendChild(divButton2);
 
+        let divButton3 = document.createElement("button");
+        divButton3.innerText = "Modificar Bases del Concurso";
+
+        let divBases = document.createElement("a");
+        divBases.setAttribute("href", "modificarBases.html");
+        divBases.appendChild(divButton3);
+
 
         document.getElementById('divCont').appendChild(divPerfil);
+        document.getElementById('divCont').appendChild(divBases);
 
         try 
         {

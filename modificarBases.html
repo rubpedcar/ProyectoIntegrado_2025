@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar Bases</title>
+</head>
+<body>
+    <header>
+        <a href="index.html">Volver a la página principal</a>
+        <p id="mensaje" style="color:red;font-weight:bold"></p>
+    </header>
+
+    <h1>Modicar las Bases del Concurso</h1>
+
+    <form id="form"> 
+        <p>Número máximo de publicaciones por participante: <input type="number" id="formFotos"></p>
+        <p>Número máximo de votos por usuario: <input type="number" id="formVotos"></p>
+        <p>Plazo límite para la subida de publicaciones: <input type="date" id="plazoFotos"><input type="time" id="horaFotos"></p>
+        <p>Plazo límite para votar: <input type="date" id="plazoVotos"><input type="time" id="horaVotos"></p>
+
+        <input type="submit" value="Modificar" id="btn">
+        <input type="reset" value="Borrar" id="borrar">
+    </form>
+</body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        event.preventDefault();
+        getBases();
+    });
+
+    document.getElementById("borrar").addEventListener("click", function() {
+        document.getElementById("mensaje").innerText = "";
+    });
+
+    function getBases() {
+        fetch(`http://localhost/hlc/tarde/Backend_ProyectoIntegrado/bases.php`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Hubo un problema.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("formFotos").value = data.limite_fotos;
+                document.getElementById("formVotos").value = data.limite_votos;
+
+                let plazoFotos = data.plazo_publicaciones.substr(0, 10);
+                let horaFotos = data.plazo_publicaciones.substr(11, 18);
+
+                let plazoVotos = data.plazo_votaciones.substr(0, 10);
+                let horaVotos = data.plazo_votaciones.substr(11, 18);
+
+                document.getElementById("plazoFotos").value = plazoFotos;
+                document.getElementById("horaFotos").value = horaFotos;
+                document.getElementById("plazoVotos").value = plazoVotos;
+                document.getElementById("horaVotos").value = horaVotos;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    document.getElementById("form").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        let limite_fotos = document.getElementById("formFotos").value;
+        let limite_votos = document.getElementById("formVotos").value;
+        let plazo_publicaciones = document.getElementById("plazoFotos").value + " " + document.getElementById("horaFotos").value;
+        let plazo_votaciones = document.getElementById("plazoVotos").value + " " + document.getElementById("horaVotos").value;
+
+        const datos = {limite_fotos, limite_votos, plazo_votaciones, plazo_publicaciones};
+
+        fetch(`http://localhost/hlc/tarde/Backend_ProyectoIntegrado/bases.php`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datos)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            
+            if(!data.error)
+            {
+                alert("Bases modificadas correctamente.");
+                window.location.href = "index.html";
+            }
+            else
+            {
+                alert("Error al modificar las bases: " + data.error);
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            document.getElementById("mensaje").innerText = "Error al modificar las bases.";
+        });
+    });
+</script>
+</html>
