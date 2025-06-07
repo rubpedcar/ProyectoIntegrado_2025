@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     mostrarBases();
 
+    // Dependiendo del rol del usuario, se mostrará una distribución distinta de la página.
     if (rol == null) {
         enlace.innerText = "Iniciar sesión";
         enlace.setAttribute("href", "acceso/login.html");
@@ -93,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 });
 
-
+// Se muestra el listado de publicaciones de un usuario en concreto. Si es el admin, mostrará todas las publicaciones existentes.
 function publicacionesUser(id) {
     //event.preventDefault();
     console.log("Publicaciones de usuario");
@@ -202,7 +203,7 @@ function publicacionesUser(id) {
 }
 
 
-
+// Se muestra el listado de publicaciones admitidas.
 function publicaciones(event) {
     event.preventDefault();
 
@@ -300,12 +301,43 @@ function logout() {
 }
 
 
-function votar(idPublicacion) {
+function votar(publicacion_id) {
+
+    // Primero tomaremos la ip pública del usuario y la guardaremos para futuras votaciones.
     fetch('https://api.ipify.org?format=json')
         .then(response => response.json())
         .then(data => {
-            const ip = data.ip;
-            alert("Voto Registrado. Publicacion con id: " + idPublicacion + "\nTu IP: " + ip);
+            const usuario_ip = data.ip;
+
+            localStorage.setItem("ip", usuario_ip);
+
+            const datos = {publicacion_id, usuario_ip};
+            
+            //alert("Voto Registrado. Publicacion con id: " + idPublicacion + "\nTu IP: " + ip);
+
+            fetch("http://localhost/hlc/tarde/Backend_ProyectoIntegrado/votaciones.php", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(datos)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Hubo un problema.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+
+                    console.log(data);
+                    alert(data.mensaje);
+
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            
 
         })
         .catch(() => {
@@ -314,7 +346,7 @@ function votar(idPublicacion) {
 }
 
 
-
+// Se muestran las bases del concurso.
 function mostrarBases()
 {
     fetch("http://localhost/hlc/tarde/Backend_ProyectoIntegrado/bases.php")
