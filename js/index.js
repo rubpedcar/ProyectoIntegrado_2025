@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     console.log("Id: " + id);
     console.log("Rol: " +rol);
 
+    mostrarBases();
+
     if (rol == null) {
         enlace.innerText = "Iniciar sesión";
         enlace.setAttribute("href", "acceso/login.html");
@@ -308,5 +310,29 @@ function votar(idPublicacion) {
         })
         .catch(() => {
             alert("No se pudo obtener la IP.");
+        });
+}
+
+
+
+function mostrarBases()
+{
+    fetch("http://localhost/hlc/tarde/Backend_ProyectoIntegrado/bases.php")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Hubo un problema.');
+            }
+            return response.json();
+        })
+        .then(data => {
+
+            document.getElementById("limite_fotos").innerText = "Cada participante puede subir un máximo de " + data.limite_fotos + " publicaciones.";
+            document.getElementById("limite_votos").innerText = "Cada usuario no registrado puede votar " + data.limite_votos + " publicaciones distintas.";
+            document.getElementById("plazo_publicaciones").innerText = "El plazo de publicación se cerrará: " + data.plazo_publicaciones;
+            document.getElementById("plazo_votaciones").innerText = "El plazo de votación se cerrará: " + data.plazo_votaciones;
+
+        })
+        .catch(error => {
+            console.error('Error al cargar las bases:', error);
         });
 }
