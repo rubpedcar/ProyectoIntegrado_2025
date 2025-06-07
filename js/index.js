@@ -208,6 +208,7 @@ function publicaciones(event) {
             data.forEach(publicacion => {
 
                 let divFoto = document.createElement("div");
+                divFoto.setAttribute("class", "divFoto");
                 let divNombre = document.createElement("h3");
                 let divDesc = document.createElement("p");
                 let divUser = document.createElement("p");
@@ -266,6 +267,7 @@ function publicaciones(event) {
                 divFoto.appendChild(divUser);
                 divFoto.appendChild(divCate);
                 divFoto.appendChild(divImagen);
+                divFoto.appendChild(document.createElement("br"));
                 divFoto.appendChild(btnVotar);
                 document.getElementById('divCont').appendChild(divFoto);
             });
