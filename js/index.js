@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         enlace.innerText = "Cerrar sesión";
         enlace.setAttribute("href", "");
         enlace.setAttribute("onclick", "logout()");
-        cabecera.innerText = "Publicaciones de " + nombre;
+        cabecera.innerText = "Administrador: " + nombre;
 
         let divButton2 = document.createElement("button");
         divButton2.innerText = "Mis Datos";
@@ -213,11 +213,15 @@ function publicaciones(event) {
                 let divUser = document.createElement("p");
                 let divCate = document.createElement("p");
                 let divImagen = document.createElement("img");
+                let btnVotar = document.createElement("button");
 
                 divNombre.textContent = publicacion.nombre;
                 divDesc.textContent = "Descripción: " + publicacion.descripcion;
                 divImagen.setAttribute("src", "http://localhost/hlc/tarde/Backend_ProyectoIntegrado/" + publicacion.imagen);
                 divImagen.setAttribute("width", "400px");
+                btnVotar.textContent = "Votar";
+                btnVotar.setAttribute("id", "btnVotar");
+                btnVotar.setAttribute("onclick", "votar(" + publicacion.id + ")");
 
 
                 // Se obtiene el nombre del usuario.
@@ -262,6 +266,7 @@ function publicaciones(event) {
                 divFoto.appendChild(divUser);
                 divFoto.appendChild(divCate);
                 divFoto.appendChild(divImagen);
+                divFoto.appendChild(btnVotar);
                 document.getElementById('divCont').appendChild(divFoto);
             });
         })
@@ -283,3 +288,15 @@ function logout() {
 }
 
 
+function votar(idPublicacion) {
+    fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+            const ip = data.ip;
+            alert("Voto Registrado. Publicacion con id: " + idPublicacion + "\nTu IP: " + ip);
+
+        })
+        .catch(() => {
+            alert("No se pudo obtener la IP.");
+        });
+}
